@@ -1,0 +1,25 @@
+---
+- name: AWS Linux Yum security package list
+
+  hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo 
+  tasks:
+
+  - name: check packages for security updates
+    shell: yum list-security -q
+    changed_when: updates.stdout_lines | length > 0
+    args:
+      warn: false
+    register: updates
+  
+  - name: display package count
+
+    vars:
+      msg: |
+           Found {{ updates.stdout_lines | length }} security packages to be updated:
+           {{ updates.stdout }}"
+
+    debug:
+      msg: "{{ msg.split('\n') }}"
