@@ -1,0 +1,27 @@
+---
+# AWS System Yum update
+- name: AWS YUM update
+
+  hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo 
+  tasks:
+
+  - name: Update all packages to latest
+    yum: 
+      name=* 
+      state=latest
+
+  - name: Check if reboot is required after system update
+    shell: needs-restarting -r
+    failed_when: false
+    register: reboot_required
+    changed_when: false
+
+  - when: reboot_required.rc != 0
+    block:
+      - name: reboot the server if required
+        reboot:
+          reboot_timeout: 3600
+          msg: Rebooted
