@@ -1,5 +1,4 @@
-# ansible
-## Ansible Playbooks
+# Ansible Playbooks
 Playbook are tested at following environment
 
 CentOS 7  
